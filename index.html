@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <form action="javascript:void(0);" method="POST" onsubmit="app.add()">
+        <input type="text" id="add" placeholder="New Product">
+        <input type="submit" value="Add">
+    </form>
+</div>
+
+<table>
+    <tr>
+    </tr>
+    <tbody id="products">
+    </tbody>
+</table>
+
+
+<div id="spoil" role="aria-hidden">
+    <p><br></p>
+        <form action="javascript:void(0);" method="POST" id="save">
+            <input type="text" id="edit">
+            <input type="submit" value="Save" /> <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+        </form>
+</div>
+<script>
+    let app = new function () {
+        this.el = document.getElementById("products");
+        this.products = ["Hảo Hảo", "3 Miền", "8 Tôm", "Omachi"];
+
+        this.display = function () {
+            let data = "";
+            if (this.products.length > 0) {
+                for (let i = 0; i < this.products.length; i++) {
+                    data += "<tr>";
+                    data += "<td>" + this.products[i] + "</td>";
+                    data += '<td><button onclick="app.edit(' + i + ')">Edit</button></td>';
+                    data += '<td><button onclick="app.delete(' + i + ')">Delete</button></td>';
+                    data += "</tr>";
+                }
+            }
+            return this.el.innerHTML = data;
+        };
+        this.add = function () {
+            el = document.getElementById("add");
+            let product = el.value;
+            if (product) {
+                this.products.push(product.trim());
+                el.value = "";
+                this.display();
+            }
+        };
+        this.edit = function (item) {
+            let el = document.getElementById("edit");
+            el.value = this.products[item];
+            document.getElementById("spoil").style.dipslay = "block";
+            self = this;
+            document.getElementById("save").onsubmit = function () {
+                let product = el.value;
+                if (product) {
+                    self.products.splice(item, 1, product.trim());
+                    self.display();
+                }
+            }
+        };
+        this.delete = function (item) {
+            this.products.splice(item, 1);
+            this.display();
+        }
+    };
+
+    app.display();
+    function closeInput() {
+        document.getElementById("spoil").style.display = "none";
+    }
+
+
+
+</script>
+</body>
+</html>
